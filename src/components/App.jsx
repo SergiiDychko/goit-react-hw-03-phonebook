@@ -9,7 +9,7 @@ import SearchInput from './SearchInput/';
 
 class App extends Component {
   state = {
-    contacts: [],
+    contacts: JSON.parse(localStorage.getItem('storedContacts')) || [],
     filter: '',
   };
 
@@ -32,7 +32,7 @@ class App extends Component {
       contacts: [...contacts, newContact],
     });
   };
-  
+
   handleFilter = evt => {
     this.setState({ filter: evt.target.value });
   };
@@ -49,6 +49,12 @@ class App extends Component {
       contacts: prevState.contacts.filter(contact => contact.id !== contactId),
     }));
   };
+
+  componentDidUpdate(prevState) {
+    if (this.state.contacts !== prevState.contacts) {
+      localStorage.setItem('storedContacts', JSON.stringify(this.state.contacts));
+    }
+  }
 
   render() {
     const { contacts, filter } = this.state;
